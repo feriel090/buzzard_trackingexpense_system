@@ -41,3 +41,4 @@ Demo users (seeded):
 - hr_head / hrpass (department HR)
 - marketing_head / markpass (department Marketing)
 - it_head / itpass (department IT)
+"# buzzard_trackingexpense_system" 
