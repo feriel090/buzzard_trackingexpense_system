@@ -1,0 +1,42 @@
+body {
+  background: linear-gradient(135deg, #0B1E3F 0%, #142850 50%, #1B1B3A 100%);
+  color: black; /* changed from #f0f0f0 to black */
+  font-family: 'Poppins', sans-serif;
+}
+
+.bg-navy {
+  background-color: #0B1E3F !important;
+}
+
+/* Change pink text to black so readable, but keep pink elements for emphasis if needed */
+.text-pink { 
+  color: black !important; 
+}
+
+.btn-pink {
+  background-color: #FFB6C1;
+  color: #0B1E3F;
+  border: none;
+  font-weight: 600;
+}
+.btn-pink:hover {
+  background-color: #ff9cb0;
+  color: black; /* changed hover text to black for readability */
+}
+
+.bg-glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+}
+
+/* Keep table styles untouched */
+.table-dark {
+  background-color: rgba(0, 0, 0, 0.3);
+  /* table text remains unchanged */
+}
+
+.card {
+  border-radius: 15px;
+  color: black; /* ensure text inside cards is black */
+}

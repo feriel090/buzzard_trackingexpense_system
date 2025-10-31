@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+body {
+    background: linear-gradient(to right, #b3e5fc, #f8bbd0);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.expense-card {
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 600px;
+    padding: 40px;
+}
+h2 {
+    color: #0d47a1;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+label {
+    color: #0d47a1;
+    font-weight: 600;
+}
+.btn {
+    background-color: #0d47a1;
+    color: white;
+    width: 100%;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 1.1rem;
+    transition: 0.3s;
+}
+.btn:hover {
+    background-color: #d81b60;
+}
+</style>
+
+<div class="expense-card">
+    <h2>📄 Submit New Expense — {{ dept }}</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label>Title</label>
+            <input name="title" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Category</label>
+            <select name="category" class="form-select" required>
+                <option>Software Licenses & Subscriptions</option>
+                <option>Hardware Maintenance & Upgrades</option>
+                <option>Recruitment & Hiring Costs</option>
+                <option>Employee Training & Development</option>
+                <option>Logistics & Transportation</option>
+                <option>Office Supplies & Utilities</option>
+                <option>Customer Support Tools & Software</option>
+                <option>Staff Overtime & Incentives</option>
+                <option>Advertising & Promotions</option>
+                <option>Event & Campaign Costs</option>
+                <option>Research Materials & Equipment</option>
+                <option>Prototyping & Testing Costs</option>
+                <option>Others</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Amount</label>
+            <input name="amount" type="number" step="0.01" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Date</label>
+            <input name="date" type="date" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Purpose</label>
+            <textarea name="purpose" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+            <label>Receipt (jpg/png/pdf)</label>
+            <input type="file" name="receipt" class="form-control">
+        </div>
+        <button class="btn">Submit Expense</button>
+    </form>
+</div>
+{% endblock %}

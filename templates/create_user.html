@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create User | Buzzard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f7f9fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .create-form {
+      background: #fff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      color: navy;
+      margin-bottom: 20px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: navy;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #ffb6c1; /* soft pink hover */
+      color: navy;
+    }
+  </style>
+</head>
+<body>
+  <form class="create-form" method="POST">
+    <h2>Create New User</h2>
+    <input type="text" name="username" placeholder="Full Name" required>
+    <input type="email" name="email" placeholder="Email Address" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <select name="role" required>
+      <option value="">Select Role</option>
+      <option value="admin">Admin</option>
+      <option value="head_it">Head of IT Department</option>
+      <option value="it_staff">IT Staff</option>
+      <option value="finance_staff">Finance Staff</option>
+      <option value="head_marketing">Head of Marketing Department</option>
+      <option value="head_operations">Head of Operations Department</option>
+      <option value="head_customer_services">Head of Customer Services Department</option>
+      <option value="head_rd">Head of R&D Department</option>
+    </select>
+    <button type="submit">Create Account</button>
+  </form>
+</body>
+</html>

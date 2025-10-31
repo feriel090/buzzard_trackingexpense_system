@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f7f9fb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .create-form {
+        background: #fff;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        width: 400px;
+        text-align: center;
+    }
+
+    h2 {
+        color: navy;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-weight: 600;
+        color: navy;
+        text-align: left;
+        margin-bottom: 5px;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0 15px 0;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+
+    input:focus, select:focus {
+        border-color: #ffb6c1;
+        outline: none;
+        box-shadow: 0 0 5px rgba(255,182,193,0.4);
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background: navy;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    button:hover {
+        background: #ffb6c1;
+        color: navy;
+    }
+
+    a {
+        display: inline-block;
+        margin-top: 15px;
+        color: navy;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    a:hover {
+        color: #ffb6c1;
+    }
+</style>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="create-form">
+    <h2>✏️ Edit User — Buzzard</h2>
+
+    <form id="editUserForm" method="post" action="{{ url_for('update_user', id=user['id']) }}">
+        <label for="username">Full Name</label>
+        <input type="text" id="username" name="username" value="{{ user['username'] }}" required>
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" value="{{ user['email'] }}" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter new password or leave blank">
+
+        <label for="role">Role</label>
+        <select id="role" name="role" required>
+            <option value="admin" {% if user['role'] == 'admin' %}selected{% endif %}>Admin</option>
+            <option value="finance" {% if user['role'] == 'finance' %}selected{% endif %}>Finance</option>
+            <option value="dept_head" {% if user['role'] == 'dept_head' %}selected{% endif %}>Department Head</option>
+        </select>
+
+        <label for="department">Department</label>
+        <input type="text" id="department" name="department" value="{{ user['department'] or '' }}">
+
+        <button type="submit">💾 Update User</button>
+    </form>
+
+    <a href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+</div>
+
+<script>
+document.getElementById("editUserForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.redirected) {
+            Swal.fire({
+                icon: 'success',
+                title: 'User Updated!',
+                text: 'The user information has been successfully updated.',
+                showConfirmButton: false,
+                timer: 1800,
+                background: '#fff',
+                color: 'navy',
+                iconColor: '#ffb6c1'
+            });
+            setTimeout(() => {
+                window.location.href = response.url;
+            }, 1800);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Update Failed',
+                text: 'Something went wrong. Please try again.',
+                confirmButtonColor: '#ffb6c1'
+            });
+        }
+    })
+    .catch(() => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Connection Error',
+            text: 'Unable to update user. Check your internet or server.',
+            confirmButtonColor: '#ffb6c1'
+        });
+    });
+});
+</script>
+{% endblock %}
