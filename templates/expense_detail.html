@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Expense Details</h2>
+<p><strong>Title:</strong> {{ expense.title }}</p>
+<p><strong>Category:</strong> {{ expense.category }}</p>
+<p><strong>Amount:</strong> {{ expense.amount }}</p>
+<p><strong>Date:</strong> {{ expense.date }}</p>
+<p><strong>Submitted By:</strong> {{ expense.submitted_by }}</p>
+<p><strong>Department:</strong> {{ expense.department }}</p>
+<p><strong>Purpose:</strong> {{ expense.purpose }}</p>
+<p><strong>Status:</strong> {{ expense.status }}</p>
+
+{% if current_user.role in ['finance_staff', 'admin'] and expense.status == "Pending" and expense.submitted_by != current_user.name %}
+<hr>
+<form action="{{ url_for('approve_expense', expense_id=expense.id) }}" method="POST">
+    <input type="password" name="pin" placeholder="Enter your PIN" required>
+    <button type="submit" class="btn btn-success">Approve</button>
+</form>
+
+<form action="{{ url_for('reject_expense', expense_id=expense.id) }}" method="POST" style="margin-top:10px;">
+    <input type="password" name="pin" placeholder="Enter your PIN" required>
+    <button type="submit" class="btn btn-danger">Reject</button>
+</form>
+{% endif %}
+{% endblock %}

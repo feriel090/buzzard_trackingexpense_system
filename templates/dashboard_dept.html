@@ -64,7 +64,6 @@ table {
     font-size: 1rem;
 }
 
-/* Table headers */
 th {
     background-color: navy;
     color: white;
@@ -72,7 +71,6 @@ th {
     text-align: center;
 }
 
-/* Table body */
 tbody td {
     color: black !important;
     border: 1px solid #ddd;
@@ -80,18 +78,15 @@ tbody td {
     text-align: center;
 }
 
-/* Even row background */
 tbody tr:nth-child(even) {
     background-color: #f1f1f1;
 }
 
-/* <em> text inside table cells */
 tbody td em {
     color: black !important;
     font-style: italic;
 }
 
-/* Input/select/textarea styling */
 input, select, textarea {
     width: 100%;
     padding: 10px;
@@ -102,7 +97,6 @@ input, select, textarea {
     color: black;
 }
 
-/* Buttons */
 .btn {
     background-color: navy;
     color: white;
@@ -119,7 +113,6 @@ input, select, textarea {
     color: navy;
 }
 
-/* No data message */
 .no-data {
     text-align: center;
     font-style: italic;
@@ -127,10 +120,10 @@ input, select, textarea {
 }
 </style>
 
-<h1>Department Dashboard — {{ current_user.department }}</h1>
+<h1>Head Dashboard — {{ current_user.department }}</h1>
 
 <div class="dashboard">
-    <div class="card" onclick="showSection('viewExpenses')">View Department Expenses</div>
+    <div class="card" onclick="showSection('viewExpenses')">View My Expenses</div>
     <div class="card" onclick="showSection('submitExpense')">Submit New Expense</div>
     <div class="card" onclick="showSection('pendingExpenses')">Pending Expenses</div>
     <div class="card" onclick="showSection('approvedExpenses')">Approved Expenses</div>
@@ -163,7 +156,7 @@ input, select, textarea {
             <td>{{ e.date }}</td>
             {% if show_edit %}
             <td>
-                {% if e.status == 'Pending' %}
+                {% if e.status == 'Pending' and e.submitted_by == current_user.name %}
                     <a href="{{ url_for('edit_expense', expense_id=e.id) }}" class="btn">Edit</a>
                 {% else %}
                     <em>Cannot edit</em>
@@ -180,7 +173,7 @@ input, select, textarea {
 {% endmacro %}
 
 <section id="viewExpenses" class="active">
-    <h2>Department Expenses</h2>
+    <h2>My Expenses</h2>
     {{ render_table(expenses) }}
 </section>
 

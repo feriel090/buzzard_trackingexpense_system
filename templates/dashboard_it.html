@@ -1,112 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>IT Department Dashboard | Buzzard</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      background-color: #f4f6fa;
-      padding: 40px;
-    }
-    h1 {
-      text-align: center;
-      color: navy;
-      margin-bottom: 30px;
-    }
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 20px;
-      margin-bottom: 40px;
-    }
-    .card {
-      background-color: white;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      text-align: center;
-      padding: 30px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .card:hover {
-      background-color: #ffb6c1;
-      color: navy;
-      transform: scale(1.05);
-    }
-    section {
-      display: none;
-      background-color: white;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      margin-top: 20px;
-    }
-    section.active {
-      display: block;
-    }
-    input, select {
-      padding: 10px;
-      margin: 5px 0;
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    button {
-      background-color: navy;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    button:hover {
-      background-color: #ffb6c1;
-      color: navy;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background-color: navy;
-      color: white;
-    }
-  </style>
-</head>
-<body>
+{% extends "base.html" %}
+{% block content %}
+<style>
+body { font-family:"Poppins",sans-serif; background:#f4f6fa; padding:40px; color:black; }
+h1, h2, h3, p, label, td, th, input, select, button, .card { color:black !important; }
 
-<h1>IT Department Dashboard</h1>
+h1 { text-align:center; margin-bottom:30px; }
+.dashboard { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:20px; margin-bottom:40px; }
+.card { background:#fff; border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,0.1); text-align:center; padding:30px; cursor:pointer; transition:0.3s; font-weight:600; }
+.card:hover { background:#ffb6c1; color:black !important; transform:scale(1.05); }
+section { display:none; background:#fff; padding:20px; border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,0.1); margin-top:20px; }
+section.active { display:block; }
+input, select { padding:10px; margin:5px 0; width:100%; border-radius:8px; border:1px solid #ccc; color:black; }
+button { background:#000; color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; margin-top:10px; transition:0.3s; }
+button:hover { background:#ffb6c1; color:black !important; }
+table { width:100%; border-collapse:collapse; margin-top:20px; color:black; }
+th, td { border:1px solid #ddd; padding:10px; text-align:center; color:black; }
+th { background:#ddd; color:black; }
+.clickable-user:hover { background:#f0f0f0; cursor:pointer; }
+.modal { display:none; position:fixed; z-index:9999; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.4); justify-content:center; align-items:center; }
+.modal-content { background:#fff; padding:25px; border-radius:15px; text-align:center; width:400px; position:relative; box-shadow:0 5px 20px rgba(0,0,0,0.2); color:black; }
+.modal-content h3 { margin-bottom:15px; }
+.pin-input { width:60%; text-align:center; padding:10px; border-radius:8px; border:1px solid #ccc; margin-bottom:10px; color:black; }
+.low-warning { background:linear-gradient(90deg, rgba(255,230,128,0.2), rgba(255,128,128,0.06)); }
+</style>
+
+<h1>IT Department Dashboard | Buzzard</h1>
 
 <div class="dashboard">
-  <div class="card" onclick="showSection('createUser')">Create New User</div>
+  <div class="card" onclick="showSection('createUser')">➕ Create User</div>
   <div class="card" onclick="showSection('manageUsers')">Manage Users</div>
   <div class="card" onclick="showSection('resetPassword')">Reset My Password</div>
+  <div class="card" onclick="showSection('changePin')">Change My PIN</div>
 </div>
 
 <!-- Create User Section -->
 <section id="createUser">
   <h2>Create New User</h2>
-  <form method="POST" action="{{ url_for('create_user') }}">
-    <label>Username</label>
-    <input type="text" name="username" required>
-    <label>Password</label>
-    <input type="password" name="password" required>
+  <form id="createUserForm" method="POST" action="{{ url_for('create_user') }}">
+    <label>Last Name</label><input type="text" name="last_name" required>
+    <label>Given Name</label><input type="text" name="given_name" required>
+    <label>Middle Name</label><input type="text" name="middle_name">
+    <label>Address</label><input type="text" name="address" required>
+    <label>Contact Number</label><input type="tel" name="contact_number" placeholder="09XXXXXXXXX" pattern="[0-9]{11}" required>
+    <label>Birthday</label><input type="date" name="birthday" required>
+    <label>Username</label><input type="text" name="username" required>
+    <label>Password</label><input type="password" name="password" required>
     <label>Role</label>
-    <select name="role" required>
+    <select name="role" id="createRole" required>
+      <option value="">Select Role</option>
       <option value="admin">Admin</option>
       <option value="finance">Finance</option>
       <option value="head">Head</option>
       <option value="it">IT</option>
+      <option value="marketing">Marketing</option>
+      <option value="sales">Sales</option>
+      <option value="hr">HR</option>
     </select>
+    <label>Department</label>
+    <input type="text" name="department" id="createDept" readonly>
     <button type="submit">Create User</button>
   </form>
 </section>
@@ -115,21 +66,58 @@
 <section id="manageUsers">
   <h2>Manage Users</h2>
   <table>
-    <tr><th>ID</th><th>Username</th><th>Role</th><th>Department</th></tr>
+    <tr>
+      <th>ID</th><th>Full Name</th><th>Username</th><th>Role</th><th>Department</th><th>Email</th><th>Action</th>
+    </tr>
     {% for user in users %}
-      <tr>
-        <td>{{ user.id }}</td>
-        <td>{{ user.name }}</td>
-        <td>{{ user.role }}</td>
-        <td>{{ user.department or '-' }}</td>
-      </tr>
+    <tr>
+      <td>{{ user.id }}</td>
+      <td class="clickable-user"
+          data-id="{{ user.id }}"
+          data-last_name="{{ user.last_name }}"
+          data-given_name="{{ user.given_name }}"
+          data-middle_name="{{ user.middle_name }}"
+          data-fullname="{{ user.full_name or '-' }}"
+          data-email="{{ user.email or '-' }}"
+          data-contact="{{ user.contact_number or '-' }}"
+          data-birthday="{{ user.birthday or '-' }}"
+          data-department="{{ user.department or '-' }}"
+          data-date_created="{{ user.date_created.strftime('%Y-%m-%d') if user.date_created else '-' }}">
+          {{ user.full_name or '-' }}
+      </td>
+      <td>{{ user.name }}</td>
+      <td>{{ user.role }}</td>
+      <td>{{ user.department or '-' }}</td>
+      <td>{{ user.email or '-' }}</td>
+      <td>
+        <button onclick="window.location.href='{{ url_for('edit_user', user_id=user.id) }}'">Edit</button>
+        <form method="post" action="{{ url_for('delete_user', user_id=user.id) }}" class="pinForm" style="display:inline;">
+          <button type="button" onclick="openPinModal(this.form)">Delete</button>
+        </form>
+      </td>
+    </tr>
     {% endfor %}
   </table>
 </section>
 
+<!-- User Info Modal -->
+<div id="userInfoModal" class="modal">
+  <div class="modal-content">
+    <span style="position:absolute;top:10px;right:15px;cursor:pointer;" onclick="closeUserInfoModal()">&times;</span>
+    <h3>User Information</h3>
+    <p><strong>Full Name:</strong> <span id="infoFullName"></span></p>
+    <p><strong>Email:</strong> <span id="infoEmail"></span></p>
+    <p><strong>Contact Number:</strong> <span id="infoContact"></span></p>
+    <p><strong>Birthday:</strong> <span id="infoBirthday"></span></p>
+    <p><strong>Department:</strong> <span id="infoDepartment"></span></p>
+    <p><strong>Date Created:</strong> <span id="infoDateCreated"></span></p>
+    <button onclick="closeUserInfoModal()">Close</button>
+  </div>
+</div>
+
 <!-- Reset Password Section -->
 <section id="resetPassword">
-  <h2>Reset My Password</h2>
+  <h2>Change My Password</h2>
   <form method="POST" action="{{ url_for('reset_password') }}">
     <label>Username</label>
     <input type="text" name="username" value="{{ current_user.name }}" readonly>
@@ -141,12 +129,119 @@
   </form>
 </section>
 
-<script>
-  function showSection(id) {
-    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  }
-</script>
+<!-- Change PIN Section -->
+<section id="changePin">
+  <h2>Change PIN</h2>
+  <form id="changePinForm">
+    <label>Current PIN</label>
+    <input type="password" id="currentPin" required>
+    <label>New PIN</label>
+    <input type="password" id="newPin" required>
+    <label>Confirm New PIN</label>
+    <input type="password" id="confirmPin" required>
+    <button type="button" onclick="submitNewPin()">Update PIN</button>
+  </form>
+</section>
 
-</body>
-</html>
+<!-- Unified PIN Modal -->
+<div id="pinModal" class="modal">
+  <div class="modal-content">
+    <span style="position:absolute;top:10px;right:15px;cursor:pointer;" onclick="closePinModal()">&times;</span>
+    <h3>Enter PIN to Confirm</h3>
+    <input type="password" id="pinInput" class="pin-input" placeholder="Enter PIN">
+    <br>
+    <button onclick="submitPin()">Confirm</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+// Section toggle
+function showSection(id){
+  document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// Department auto-fill
+function setDepartment(selectEl, deptInputId){
+  const deptInput = document.getElementById(deptInputId);
+  switch(selectEl.value){
+    case 'head': case 'it': deptInput.value='IT'; break;
+    case 'finance': deptInput.value='Finance'; break;
+    case 'marketing': deptInput.value='Marketing'; break;
+    case 'sales': deptInput.value='Sales'; break;
+    case 'hr': deptInput.value='HR'; break;
+    case 'admin': deptInput.value=''; break;
+    default: deptInput.value=''; break;
+  }
+}
+document.getElementById('createRole').addEventListener('change',()=>setDepartment(document.getElementById('createRole'),'createDept'));
+
+// Unified PIN modal for deletion
+let currentForm = null;
+function openPinModal(form){ 
+  currentForm=form; 
+  document.getElementById('pinInput').value=''; 
+  document.getElementById('pinModal').style.display='flex'; 
+}
+function submitPin(){
+  const pin = document.getElementById('pinInput').value.trim();
+  if(!/^\d{4}$/.test(pin)){
+    Swal.fire({icon:'error', title:'Invalid PIN', text:'PIN must be 4 digits', confirmButtonColor:'#ffb6c1'});
+    return;
+  }
+  let input=document.createElement('input'); input.type='hidden'; input.name='pin'; input.value=pin;
+  currentForm.appendChild(input); currentForm.submit(); closePinModal();
+}
+function closePinModal(){ document.getElementById('pinModal').style.display='none'; }
+
+// Change PIN via fetch
+function submitNewPin(){
+  const pinVal = document.getElementById('newPin').value.trim();
+  const confirmVal = document.getElementById('confirmPin').value.trim();
+  if(pinVal!==confirmVal){ 
+    Swal.fire({icon:'error', title:'PIN Mismatch', text:'New PIN and Confirm PIN must match', confirmButtonColor:'#ffb6c1'}); 
+    return; 
+  }
+  if(!/^\d{4}$/.test(pinVal)){
+    Swal.fire({icon:'error', title:'Invalid PIN', text:'PIN must be 4 digits', confirmButtonColor:'#ffb6c1'});
+    return;
+  }
+  fetch("{{ url_for('change_pin') }}", {
+    method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({pin:pinVal})
+  }).then(res=>res.json()).then(data=>{
+    if(data.status==='success'){
+      Swal.fire({icon:'success', title:'PIN Updated', text:data.message, showConfirmButton:false, timer:1500, background:'#fff', color:'navy', iconColor:'#ffb6c1'});
+      document.getElementById('newPin').value=''; document.getElementById('confirmPin').value='';
+    } else {
+      Swal.fire({icon:'error', title:'Error', text:data.message, confirmButtonColor:'#ffb6c1'});
+    }
+  });
+}
+
+// Clickable Full Name for User Info
+document.querySelectorAll('.clickable-user').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    const user = {
+      full_name: el.dataset.fullname,
+      email: el.dataset.email,
+      contact_number: el.dataset.contact,
+      birthday: el.dataset.birthday,
+      department: el.dataset.department,
+      date_created: el.dataset.date_created
+    };
+    openUserInfoModal(user);
+  });
+});
+function openUserInfoModal(user){
+  document.getElementById('infoFullName').innerText = user.full_name || '-';
+  document.getElementById('infoEmail').innerText = user.email || '-';
+  document.getElementById('infoContact').innerText = user.contact_number || '-';
+  document.getElementById('infoBirthday').innerText = user.birthday || '-';
+  document.getElementById('infoDepartment').innerText = user.department || '-';
+  document.getElementById('infoDateCreated').innerText = user.date_created || '-';
+  document.getElementById('userInfoModal').style.display = 'flex';
+}
+function closeUserInfoModal(){ document.getElementById('userInfoModal').style.display = 'none'; }
+</script>
+{% endblock %}

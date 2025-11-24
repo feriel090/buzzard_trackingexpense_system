@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="max-width:500px; margin:auto; padding:20px; background:#f7f9fb; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align:center; margin-bottom:20px;">Change PIN</h2>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding:10px; margin-bottom:10px; border-radius:5px;
+              {% if category=='success' %}background:#d4edda; color:#155724;
+              {% elif category=='error' or category=='danger' %}background:#f8d7da; color:#721c24;{% endif %}">
+              {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Change PIN Form -->
+    <form method="POST" action="{{ url_for('change_pin') }}">
+        <div style="margin-bottom:15px;">
+            <label for="current_pin">Current PIN:</label>
+            <input type="password" name="current_pin" id="current_pin" class="form-control" required placeholder="Enter current PIN">
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label for="new_pin">New PIN:</label>
+            <input type="password" name="new_pin" id="new_pin" class="form-control" required placeholder="Enter new PIN">
+        </div>
+
+        <button type="submit" style="width:100%; padding:10px; background:#007bff; color:white; border:none; border-radius:5px;">
+            Change PIN
+        </button>
+    </form>
+</div>
+{% endblock %}

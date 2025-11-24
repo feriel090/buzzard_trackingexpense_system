@@ -1,114 +1,157 @@
 {% extends "base.html" %}
 {% block content %}
 <style>
-    body {
-        font-family: "Poppins", sans-serif;
-        background-color: #f7f9fb;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f7f9fb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
 
-    .create-form {
-        background: #fff;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        width: 400px;
-        text-align: center;
-    }
+.create-form {
+    background: #fff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 400px;
+    text-align: center;
+}
 
-    h2 {
-        color: navy;
-        margin-bottom: 20px;
-    }
+h2 {
+    color: navy;
+    margin-bottom: 20px;
+}
 
-    label {
-        display: block;
-        font-weight: 600;
-        color: navy;
-        text-align: left;
-        margin-bottom: 5px;
-    }
+label {
+    display: block;
+    font-weight: 600;
+    color: navy;
+    text-align: left;
+    margin-bottom: 5px;
+}
 
-    input, select {
-        width: 100%;
-        padding: 10px;
-        margin: 8px 0 15px 0;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 1rem;
-    }
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+}
 
-    input:focus, select:focus {
-        border-color: #ffb6c1;
-        outline: none;
-        box-shadow: 0 0 5px rgba(255,182,193,0.4);
-    }
+input:focus, select:focus {
+    border-color: #ffb6c1;
+    outline: none;
+    box-shadow: 0 0 5px rgba(255,182,193,0.4);
+}
 
-    button {
-        width: 100%;
-        padding: 10px;
-        background: navy;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: bold;
-    }
+button {
+    width: 100%;
+    padding: 10px;
+    background: navy;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
 
-    button:hover {
-        background: #ffb6c1;
-        color: navy;
-    }
+button:hover {
+    background: #ffb6c1;
+    color: navy;
+}
 
-    a {
-        display: inline-block;
-        margin-top: 15px;
-        color: navy;
-        text-decoration: none;
-        font-weight: 600;
-    }
+a {
+    display: inline-block;
+    margin-top: 15px;
+    color: navy;
+    text-decoration: none;
+    font-weight: 600;
+}
 
-    a:hover {
-        color: #ffb6c1;
-    }
+a:hover {
+    color: #ffb6c1;
+}
 </style>
 
-<!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="create-form">
     <h2>✏️ Edit User — Buzzard</h2>
 
-    <form id="editUserForm" method="post" action="{{ url_for('update_user', id=user['id']) }}">
-        <label for="username">Full Name</label>
-        <input type="text" id="username" name="username" value="{{ user['username'] }}" required>
+    <form id="editUserForm" method="post" action="{{ url_for('edit_user', user_id=user.id) }}">
+        <!-- Full Name -->
+        <input type="text" name="last_name" placeholder="Last Name" value="{{ user.last_name }}" required>
+        <input type="text" name="given_name" placeholder="Given Name" value="{{ user.given_name }}" required>
+        <input type="text" name="middle_name" placeholder="Middle Name" value="{{ user.middle_name }}">
 
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" value="{{ user['email'] }}" required>
+        <!-- Address -->
+        <input type="text" name="address" placeholder="Address" value="{{ user.address }}" required>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Enter new password or leave blank">
+        <!-- Contact Number -->
+        <input type="tel" name="contact_number" placeholder="Contact Number" pattern="[0-9]{11}" value="{{ user.contact_number }}" required>
 
-        <label for="role">Role</label>
-        <select id="role" name="role" required>
-            <option value="admin" {% if user['role'] == 'admin' %}selected{% endif %}>Admin</option>
-            <option value="finance" {% if user['role'] == 'finance' %}selected{% endif %}>Finance</option>
-            <option value="dept_head" {% if user['role'] == 'dept_head' %}selected{% endif %}>Department Head</option>
+        <!-- Birthday -->
+        <label for="birthday">Birthday</label>
+        <input type="date" name="birthday" id="birthday" value="{{ user.birthday }}" required>
+
+        <!-- Username -->
+        <input type="text" name="username" placeholder="Username" value="{{ user.name }}" required>
+
+        <!-- Password -->
+        <input type="password" name="password" placeholder="Enter new password or leave blank">
+
+        <!-- Role Dropdown -->
+        <select name="role" id="roleSelect" required>
+            <option value="">Select Role</option>
+            <option value="admin" {% if user.role=='admin' %}selected{% endif %}>Admin</option>
+            <option value="it_staff" {% if user.role=='it_staff' %}selected{% endif %}>IT Staff</option>
+            <option value="head_it" {% if user.role=='head_it' %}selected{% endif %}>Head of IT</option>
+            <option value="finance_staff" {% if user.role=='finance_staff' %}selected{% endif %}>Finance Staff</option>
+            <option value="head_hr" {% if user.role=='head_hr' %}selected{% endif %}>Head of HR</option>
+            <option value="head_marketing" {% if user.role=='head_marketing' %}selected{% endif %}>Head of Marketing</option>
+            <option value="head_operations" {% if user.role=='head_operations' %}selected{% endif %}>Head of Operations</option>
+            <option value="head_customer_service" {% if user.role=='head_customer_service' %}selected{% endif %}>Head of Customer Service</option>
+            <option value="head_rd" {% if user.role=='head_rd' %}selected{% endif %}>Head of R&D</option>
         </select>
 
-        <label for="department">Department</label>
-        <input type="text" id="department" name="department" value="{{ user['department'] or '' }}">
+        <!-- Department (auto-filled) -->
+        <input type="text" name="department" id="department" placeholder="Department" value="{{ user.department or '' }}" readonly>
 
         <button type="submit">💾 Update User</button>
     </form>
 
-    <a href="{{ url_for('admin_dashboard') }}">← Back to Dashboard</a>
+    <a href="{{ url_for('dashboard_admin') if current_user.role=='admin' else url_for('dashboard_it') }}">← Back to Dashboard</a>
 </div>
 
 <script>
+const roleSelect = document.getElementById('roleSelect');
+const departmentInput = document.getElementById('department');
+
+// Auto-fill department based on role
+function updateDepartment() {
+    const role = roleSelect.value;
+    switch(role) {
+        case 'admin': departmentInput.value = ''; break;
+        case 'it_staff':
+        case 'head_it': departmentInput.value = 'IT'; break;
+        case 'finance_staff': departmentInput.value = 'Finance'; break;
+        case 'head_hr': departmentInput.value = 'HR'; break;
+        case 'head_marketing': departmentInput.value = 'Marketing'; break;
+        case 'head_operations': departmentInput.value = 'Operations'; break;
+        case 'head_customer_service': departmentInput.value = 'Customer Service'; break;
+        case 'head_rd': departmentInput.value = 'R&D'; break;
+        default: departmentInput.value = ''; break;
+    }
+}
+
+// Update on page load & role change
+updateDepartment();
+roleSelect.addEventListener('change', updateDepartment);
+
+// SweetAlert success/failure
 document.getElementById("editUserForm").addEventListener("submit", function(event) {
     event.preventDefault();
     const form = event.target;

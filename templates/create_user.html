@@ -13,7 +13,6 @@
       align-items: center;
       height: 100vh;
     }
-
     .create-form {
       background: #fff;
       padding: 40px;
@@ -21,13 +20,11 @@
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       width: 400px;
     }
-
     h2 {
       text-align: center;
       color: navy;
       margin-bottom: 20px;
     }
-
     input, select {
       width: 100%;
       padding: 10px;
@@ -35,7 +32,6 @@
       border: 1px solid #ccc;
       border-radius: 8px;
     }
-
     button {
       width: 100%;
       padding: 10px;
@@ -46,9 +42,8 @@
       cursor: pointer;
       font-weight: bold;
     }
-
     button:hover {
-      background: #ffb6c1; /* soft pink hover */
+      background: #ffb6c1;
       color: navy;
     }
   </style>
@@ -56,21 +51,86 @@
 <body>
   <form class="create-form" method="POST">
     <h2>Create New User</h2>
-    <input type="text" name="username" placeholder="Full Name" required>
-    <input type="email" name="email" placeholder="Email Address" required>
-    <input type="password" name="password" placeholder="Password" required>
-    <select name="role" required>
-      <option value="">Select Role</option>
-      <option value="admin">Admin</option>
-      <option value="head_it">Head of IT Department</option>
-      <option value="it_staff">IT Staff</option>
-      <option value="finance_staff">Finance Staff</option>
-      <option value="head_marketing">Head of Marketing Department</option>
-      <option value="head_operations">Head of Operations Department</option>
-      <option value="head_customer_services">Head of Customer Services Department</option>
-      <option value="head_rd">Head of R&D Department</option>
+
+    <!-- Full Name -->
+    <input type="text" name="last_name" placeholder="Last Name" required>
+    <input type="text" name="given_name" placeholder="Given Name" required>
+    <input type="text" name="middle_name" placeholder="Middle Name">
+
+    <!-- Address -->
+    <input type="text" name="address" placeholder="Address" required>
+
+    <!-- Contact Number -->
+    <input type="tel" name="contact_number" placeholder="Contact Number (09XXXXXXXXX)" pattern="[0-9]{11}" required>
+
+    <!-- Birthday -->
+    <label for="birthday">Birthday</label>
+    <input type="date" name="birthday" id="birthday" required>
+
+    <!-- Username -->
+    <input type="text" name="username" placeholder="Username" required>
+
+    <!-- Password -->
+    <input type="password" name="password" placeholder="Password (min 8 chars)" minlength="8" required>
+
+    <!-- Role -->
+    <label for="role">Role</label>
+    <select name="role" id="roleSelect" required>
+        <option value="">Select Role</option>
+        <option value="admin">Admin</option>
+        <option value="it_staff">IT Staff</option>
+        <option value="finance_staff">Finance Staff</option>
+        <option value="head_hr">Head of HR</option>
+        <option value="head_marketing">Head of Marketing</option>
+        <option value="head_operations">Head of Operations</option>
+        <option value="head_customer_service">Head of Customer Service</option>
+        <option value="head_rd">Head of R&D</option>
+        <option value="head_it">Head of IT</option>
     </select>
+
+    <!-- Department (auto-filled based on role) -->
+    <input type="text" name="department" id="department" placeholder="Department" readonly>
+
     <button type="submit">Create Account</button>
   </form>
+
+  <script>
+    // Auto-fill department based on role
+    const roleSelect = document.getElementById('roleSelect');
+    const departmentInput = document.getElementById('department');
+
+    roleSelect.addEventListener('change', () => {
+      const role = roleSelect.value;
+      switch(role) {
+        case 'admin':
+          departmentInput.value = '';
+          break;
+        case 'it_staff':
+        case 'head_it':
+          departmentInput.value = 'IT';
+          break;
+        case 'finance_staff':
+          departmentInput.value = 'Finance';
+          break;
+        case 'head_hr':
+          departmentInput.value = 'HR';
+          break;
+        case 'head_marketing':
+          departmentInput.value = 'Marketing';
+          break;
+        case 'head_operations':
+          departmentInput.value = 'Operations';
+          break;
+        case 'head_customer_service':
+          departmentInput.value = 'Customer Service';
+          break;
+        case 'head_rd':
+          departmentInput.value = 'R&D';
+          break;
+        default:
+          departmentInput.value = '';
+      }
+    });
+  </script>
 </body>
 </html>
