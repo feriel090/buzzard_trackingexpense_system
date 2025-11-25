@@ -1,0 +1,21 @@
+<!-- templates/modals.html -->
+<!-- Minimal modal placeholders for dashboard -->
+<div id="modals-container">
+    <!-- Example modal: Change PIN -->
+    <div class="modal" id="changePinModal" style="display:none;">
+        <div class="modal-content">
+            <h3>Change PIN</h3>
+            <form id="changePinForm" method="POST" action="{{ url_for('change_pin') }}">
+                <label>Current PIN:</label>
+                <input type="password" name="current_pin" required>
+                <label>New PIN:</label>
+                <input type="password" name="new_pin" required>
+                <label>Confirm PIN:</label>
+                <input type="password" name="confirm_pin" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- You can add more modals here later -->
+</div>

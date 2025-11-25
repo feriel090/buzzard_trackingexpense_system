@@ -11,6 +11,7 @@ h1 { text-align:center; margin-bottom:30px; }
 section { display:none; background:#fff; padding:20px; border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,0.1); margin-top:20px; }
 section.active { display:block; }
 input, select { padding:10px; margin:5px 0; width:100%; border-radius:8px; border:1px solid #ccc; color:black; }
+input[readonly] { background:#f0f0f0; font-weight:600; }
 button { background:#000; color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer; margin-top:10px; transition:0.3s; }
 button:hover { background:#ffb6c1; color:black !important; }
 table { width:100%; border-collapse:collapse; margin-top:20px; color:black; }
@@ -30,7 +31,7 @@ th { background:#ddd; color:black; }
   <div class="card" onclick="showSection('createUser')">➕ Create User</div>
   <div class="card" onclick="showSection('manageUsers')">Manage Users</div>
   <div class="card" onclick="showSection('resetPassword')">Reset My Password</div>
-  <div class="card" onclick="showSection('changePin')">Change My PIN</div>
+  <div class="card" onclick="showSection('changePin')">🔒 Change PIN</div>
 </div>
 
 <!-- Create User Section -->
@@ -49,12 +50,15 @@ th { background:#ddd; color:black; }
     <select name="role" id="createRole" required>
       <option value="">Select Role</option>
       <option value="admin">Admin</option>
-      <option value="finance">Finance</option>
-      <option value="head">Head</option>
       <option value="it">IT</option>
-      <option value="marketing">Marketing</option>
-      <option value="sales">Sales</option>
-      <option value="hr">HR</option>
+      <option value="finance">Finance</option>
+      <option value="Head of IT">Head of IT</option>
+      <option value="Head of Marketing">Head of Marketing</option>
+      <option value="Head of Operating">Head of Operating</option>
+      <option value="Head of Customer Service">Head of Customer Service</option>
+      <option value="Head of R&D">Head of R&D</option>
+      <option value="Head of HR">Head of HR</option>
+      <option value="Head of Sales">Head of Sales</option>
     </select>
     <label>Department</label>
     <input type="text" name="department" id="createDept" readonly>
@@ -129,18 +133,16 @@ th { background:#ddd; color:black; }
   </form>
 </section>
 
-<!-- Change PIN Section -->
+<!-- Change PIN -->
 <section id="changePin">
-  <h2>Change PIN</h2>
-  <form id="changePinForm">
-    <label>Current PIN</label>
-    <input type="password" id="currentPin" required>
-    <label>New PIN</label>
-    <input type="password" id="newPin" required>
-    <label>Confirm New PIN</label>
-    <input type="password" id="confirmPin" required>
-    <button type="button" onclick="submitNewPin()">Update PIN</button>
-  </form>
+    <h2>🔒 Change PIN</h2>
+    <form id="changePinForm" method="POST" action="{{ url_for('change_pin') }}">
+        <input type="password" name="current_pin" placeholder="Current PIN" required>
+        <input type="password" name="new_pin" placeholder="New PIN" required>
+        <input type="password" name="confirm_pin" placeholder="Confirm New PIN" required>
+        <br><br>
+        <button type="submit">Change PIN</button>
+    </form>
 </section>
 
 <!-- Unified PIN Modal -->
@@ -162,20 +164,25 @@ function showSection(id){
   document.getElementById(id).classList.add('active');
 }
 
-// Department auto-fill
+// Department auto-fill (fully compatible with app.py logic)
 function setDepartment(selectEl, deptInputId){
-  const deptInput = document.getElementById(deptInputId);
-  switch(selectEl.value){
-    case 'head': case 'it': deptInput.value='IT'; break;
-    case 'finance': deptInput.value='Finance'; break;
-    case 'marketing': deptInput.value='Marketing'; break;
-    case 'sales': deptInput.value='Sales'; break;
-    case 'hr': deptInput.value='HR'; break;
-    case 'admin': deptInput.value=''; break;
-    default: deptInput.value=''; break;
-  }
+    const deptInput = document.getElementById(deptInputId);
+    const role = selectEl.value.trim();
+    if(role.toLowerCase().startsWith('head of')){
+        deptInput.value = 'Head';
+    } else if(role.toLowerCase() === 'admin') {
+        deptInput.value = 'Admin';
+    } else if(role.toLowerCase() === 'it') {
+        deptInput.value = 'IT';
+    } else if(role.toLowerCase() === 'finance') {
+        deptInput.value = 'Finance';
+    } else {
+        deptInput.value = '';
+    }
 }
-document.getElementById('createRole').addEventListener('change',()=>setDepartment(document.getElementById('createRole'),'createDept'));
+document.getElementById('createRole').addEventListener('change', ()=>{
+    setDepartment(document.getElementById('createRole'),'createDept');
+});
 
 // Unified PIN modal for deletion
 let currentForm = null;

@@ -32,7 +32,7 @@ canvas { background:#fff; border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,0.
     <div class="card" onclick="showSection('viewReports')">📊 View Reports</div>
     <div class="card" onclick="showSection('manageBudgets')">💼 Manage Budgets</div>
     <div class="card" onclick="window.location.href='{{ url_for('new_expense') }}'">➕ Submit Expense</div>
-    <div class="card" onclick="window.location.href='{{ url_for('change_pin') }}'">🔒 Change PIN</div>
+    <div class="card" onclick="showSection('changePin')">🔒 Change PIN</div>
     <div class="card" onclick="showSection('resetPassword')">Reset Password</div>
 </div>
 
@@ -71,6 +71,18 @@ canvas { background:#fff; border-radius:15px; box-shadow:0 4px 8px rgba(0,0,0,0.
         </tr>
         {% endfor %}
     </table>
+</section>
+
+<!-- Change PIN -->
+<section id="changePin">
+    <h2>🔒 Change PIN</h2>
+    <form id="changePinForm" method="POST" action="{{ url_for('change_pin') }}">
+        <input type="password" name="current_pin" placeholder="Current PIN" required>
+        <input type="password" name="new_pin" placeholder="New PIN" required>
+        <input type="password" name="confirm_pin" placeholder="Confirm New PIN" required>
+        <br><br>
+        <button type="submit">Change PIN</button>
+    </form>
 </section>
 
 <!-- Done Requests Section -->

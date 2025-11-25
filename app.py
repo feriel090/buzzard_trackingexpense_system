@@ -470,46 +470,51 @@ def delete_user(user_id):
     return redirect(url_for('dashboard_admin'))
 
 
-# ---- Change PIN (admin, it, finance) via JSON API (used by JS) ----
+
+# ---------- Change PIN ----------
 @app.route("/change_pin", methods=["GET", "POST"])
 @login_required
 def change_pin():
     user = current_user
 
-    # Only allow Admin, IT, Finance roles
-    if user.role.lower() not in ["admin", "it", "finance"]:
+    if (user.role or "").lower() not in ["admin", "it", "finance"]:
         flash("Unauthorized access.", "danger")
-        return redirect(url_for("dashboard_admin" if user.role=="admin" else "dashboard_it"))
+        return redirect(url_for('login'))
+
 
     if request.method == "POST":
         current_pin = request.form.get("current_pin", "").strip()
         new_pin = request.form.get("new_pin", "").strip()
         confirm_pin = request.form.get("confirm_pin", "").strip()
 
-        # Check if current PIN is correct
+        # Validate current PIN
         if not current_pin or not check_password_hash(user.pin, current_pin):
             flash("Current PIN is incorrect.", "danger")
             return redirect(url_for("change_pin"))
 
-        # Check new PIN confirmation
+        # Default new PIN if empty
+        if not new_pin:
+            new_pin = confirm_pin = "6969"
+
+        # Validate new PIN match
         if new_pin != confirm_pin:
             flash("New PIN and confirmation do not match.", "danger")
             return redirect(url_for("change_pin"))
 
-        # Update PIN in database (hashed)
+        # Save new PIN
         user.pin = generate_password_hash(new_pin)
         db.session.commit()
-
         flash("PIN changed successfully!", "success")
 
-        # Redirect based on role
-        if user.role == "admin":
+        # Redirect by department
+        if user.department == "Admin":
             return redirect(url_for("dashboard_admin"))
-        elif user.role == "it":
+        elif user.department == "IT":
             return redirect(url_for("dashboard_it"))
-        else:  # finance
+        else:  # Finance
             return redirect(url_for("dashboard_finance"))
 
+    # GET request
     return render_template("change_pin.html", user=user)
 
 
